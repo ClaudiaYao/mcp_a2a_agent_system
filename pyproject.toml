@@ -1,0 +1,14 @@
+[project]
+name = "mcp-a2a-agentic-ai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "a2a-sdk[grpc,http-server]>=0.3.3",
+    "asyncclick>=8.2.2.2",
+    "asyncclick-repl>=0.1.2",
+    "fastmcp>=2.11.3",
+    "google-adk>=1.13.0",
+    "mcp[cli]>=1.13.1",
+]

@@ -1,0 +1,3 @@
+This AI agent transforms a user’s query into a well-structured post. 
+It generates a compelling title, an attention-grabbing subtitle, and a concise activity highlight. 
+The content is crafted in a modern style and adapts seamlessly to the audience’s preferences, ensuring it feels both relevant and engaging.

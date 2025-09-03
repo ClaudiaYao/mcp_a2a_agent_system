@@ -11,4 +11,5 @@ dependencies = [
     "fastmcp>=2.11.3",
     "google-adk>=1.13.0",
     "mcp[cli]>=1.13.1",
+    "streamlit>=1.49.1",
 ]

@@ -12,7 +12,7 @@ from utilities.mcp import mcp_connect
 from utilities.a2a import agent_discovery, agent_connector
 from dotenv import load_dotenv
 from a2a.types import AgentCard
-import uuid
+from uuid import uuid4
 
 load_dotenv()
 
@@ -29,7 +29,7 @@ class HostAgent:
         A simple website builder agent which can create a basic website page and is built with Google's Agent Development Kit.
         """
         
-        file_path= os.path.dirname(__file__)
+        file_path = os.path.dirname(__file__)
         self.SYSTEM_INSTRUCTION = load_instruction_file(file_path + "/instructions.txt")
         self.DESCRIPTION = load_instruction_file(file_path + "/description.txt")
         
@@ -38,6 +38,7 @@ class HostAgent:
         
     
     async def create(self):
+
         self.agent = await self.build_agent()
         self.user_id = "host_agent"
         self.runner = Runner(
@@ -54,12 +55,14 @@ class HostAgent:
         Returns:
             list[AgentCard]:
         """
-        cards: list[AgentCard] = self.agent_discovery.list_agent_cards()
-        return [card.model_dump(exclude_none = True) for card in cards]
+        cards: list[AgentCard] = await self.agent_discovery.list_agent_cards()
+        cards_info = [card.model_dump(exclude_none = True)['name'] for card in cards]
+        print("🌴🌴🌴Identified agent cards:", cards_info)
+        return  [card.model_dump(exclude_none = True) for card in cards]
     
     
     async def delegate_task(self, agent_name: str, message: str) -> str:
-        cards: list[AgentCard] = self.agent_discovery.list_agent_cards()
+        cards: list[AgentCard] = await self.agent_discovery.list_agent_cards()
         
         matched_card = None
         for card in cards:
@@ -72,12 +75,13 @@ class HostAgent:
         
         connector = agent_connector.AgentConnector(matched_card)
         return await connector.send_task(message=message, 
-                            session_id=str(uuid()))
+                            session_id=str(uuid4()))
         
         
         
     async def build_agent(self) -> LlmAgent:
-        mcp_tools = self.mcp_connector.get_tools()
+        mcp_tools = await self.mcp_connector.get_tools()
+        await self.list_agents()
         
         return LlmAgent(
             name = "HostAgent",
@@ -122,14 +126,12 @@ class HostAgent:
         async for event in self.runner.run_async(
             user_id=self.user_id,
             session_id=session_id,
-            new_message=[user_content]
+            new_message=user_content
         ):  
-            print("event:", event)
-            print("is_final_response:", event.is_final_response)
             
             if event.is_final_response():
                 final_response = ""
-                if event.content and event.content.parts and event.conten.parts[-1].text:
+                if event.content and event.content.parts and event.content.parts[-1].text:
                     final_response = event.content.parts[-1].text
                     
                 yield {

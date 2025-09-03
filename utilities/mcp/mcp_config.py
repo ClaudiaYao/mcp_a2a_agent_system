@@ -1,9 +1,9 @@
 {
     "mcpservers": {
         "math_mcp_server": {
-            "command": "streamable_http",
+            "command": "streamable-http",
             "args": [
-                "http://localhost:8080/mcp/"
+                "http://localhost:10001/mcp"
             ]
         }
     }

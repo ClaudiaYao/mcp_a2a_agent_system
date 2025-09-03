@@ -2,12 +2,12 @@ from a2a.types import AgentCard, SendMessageRequest, MessageSendParams
 from a2a.client import A2AClient
 import httpx
 from uuid import uuid4
-from a2a.types import TextPart, Message, Part, Role
-import logging
+from a2a.types import TextPart, Message, Part
+import traceback
 
-logging.basicConfig(level=logging.DEBUG)  # show all logs
-logger = logging.getLogger("a2a")  # capture logs from a2a
-logger.setLevel(logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)  # show all logs
+# logger = logging.getLogger("a2a")  # capture logs from a2a
+# logger.setLevel(logging.DEBUG)
 
 
 class AgentConnector:
@@ -36,9 +36,9 @@ class AgentConnector:
             )
             
             send_message_payload = {
-                    "role": Role("user"),
+                    "role": "user",
                     "message_id": str(uuid4()),
-                    "parts": [{"text": message}],
+                    "parts": [Part(root=TextPart(text=message))],
                 }
 
             request = SendMessageRequest(
@@ -49,14 +49,12 @@ class AgentConnector:
             
             response = await a2a_client.send_message(request)
             response_data = response.model_dump(mode="json", exclude_none=True)   
-    
 
             try:
                 agent_response = response_data["result"]['status']['message']['parts'][0]['text']
             except (KeyError, IndexError):
-                print("response_data error:", response)
+                print("💥💥💥 response_data error:", response)
                 agent_response = "No response received from the agent." 
-                import traceback
                 print("❌ A2A Error:")
                 traceback.print_exc()
             

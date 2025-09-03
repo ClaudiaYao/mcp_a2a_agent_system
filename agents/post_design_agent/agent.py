@@ -65,16 +65,17 @@ class PostDesignAgent:
         
         user_content = types.Content(
             role="user",
-            parts = types.Part.from_text(text=query))
+            parts = [types.Part.from_text(text=query)]
+            )
         
         async for event in self.runner.run_async(
             user_id=self.user_id,
             session_id=session_id,
-            new_message=[user_content]
+            new_message=user_content
         ):
             if event.is_final_response:
                 final_response = ""
-                if event.content and event.content.parts and event.conten.parts[-1].text:
+                if event.content and event.content.parts and event.content.parts[-1].text:
                     final_response = event.content.parts[-1].text
                     
                 yield {

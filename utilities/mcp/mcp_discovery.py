@@ -17,10 +17,12 @@ class MCPDiscovery:
         else:
             self.config_path = config_file
             
+        self.config = self._load_config()
+            
         
     def _load_config(self) -> dict[str, any]:
         try:
-            with open(self.config_path, 'r') as file:
+            with open(self.config_path, 'r', encoding="utf8") as file:
                 data = json.load(file)
                 
                 if not isinstance(data, dict):

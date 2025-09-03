@@ -7,10 +7,11 @@ from a2a.server.apps import A2AStarletteApplication
 import uvicorn
 import asyncio
 import asyncclick as click
+from config import config
 
 @click.command()
 @click.option('--host', default='localhost', help='Host for the agent server.')
-@click.option('--port', default=8080, help='Port for the agent server.')
+@click.option('--port', default=int(config.HOST_AGENT_PORT), help='Port for the agent server.')
 async def main(host: str, port: int):
     skill = AgentSkill(
         name="HostAgent",

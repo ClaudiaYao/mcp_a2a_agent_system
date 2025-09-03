@@ -1,3 +1,2 @@
-This AI agent transforms a user’s query into a well-structured post. 
-It generates a compelling title, an attention-grabbing subtitle, and a concise activity highlight. 
-The content is crafted in a modern style and adapts seamlessly to the audience’s preferences, ensuring it feels both relevant and engaging.
+You are a helpful AI assistant, please respond to the user's query to the best of your ability.
+You have access to different tools that can help you to solve the problem and answer the user's query.

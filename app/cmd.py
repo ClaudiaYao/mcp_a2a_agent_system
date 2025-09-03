@@ -1,13 +1,14 @@
 from uuid import uuid4
 import asyncclick as click
-from utilities.a2a import agent_discovery, agent_connector
-from a2a.client import A2ACardResolver, A2AClient
+from utilities.a2a import agent_connector
+from a2a.client import A2ACardResolver
 import httpx
 import asyncio
+from config import config
 
 
 @click.command()
-@click.option("--agent_url", default="http://localhost:8080", help ="base url of A2A host agent.")
+@click.option("--agent_url", default=f"http://localhost:{config.HOST_AGENT_PORT}", help ="base url of A2A host agent.")
 @click.option("--session", default=0, help="session ID (use 0 to generate a new ID)")
 async def cli (agent_url: str, session: int):
     """
@@ -31,11 +32,11 @@ async def cli (agent_url: str, session: int):
             resolver = A2ACardResolver(base_url=agent_url, httpx_client=httpx_client)
             host_agent_card  = await resolver.get_agent_card()
             if host_agent_card:
-                print(f"[bold green]Discovered agent: {host_agent_card.name} at {agent_url}[/bold green]")
+                print(f"🌳🌳🌳 Discovered agent: {host_agent_card.name} at {agent_url}")
             else:
-                print(f"[bold yellow]No AgentCard found at {agent_url}[/bold yellow]")
+                print(f"⭐️⭐️⭐️ No AgentCard found at {agent_url}")
         except Exception as e:
-            print(f"[bold red]Error retrieving AgentCard from {agent_url}: {e}[/bold red]")
+            print(f"💥💥💥 Error retrieving AgentCard from {agent_url}: {e}")
     
     # C: connect to the host agent
     connector = agent_connector.AgentConnector(host_agent_card)
@@ -47,7 +48,7 @@ async def cli (agent_url: str, session: int):
         
         # C: send task to host agent
         response = await connector.send_task(prompt, session_id)
-        print("response from host agent:", response)
+        print("Response 🚀🚀🚀 =>", response)
     
         
 if __name__ == "__main__":

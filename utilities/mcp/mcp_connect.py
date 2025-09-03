@@ -1,7 +1,7 @@
 from utilities.mcp.mcp_discovery import MCPDiscovery
 from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
-from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPServerParams
+from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
 from mcp import StdioServerParameters
 
 class MCPConnector:
@@ -13,11 +13,11 @@ class MCPConnector:
         """
         
         self.discovery = MCPDiscovery(config_file)
-        self.tools = []
+        self.tools: list[MCPToolset] = []
     
     async def get_tools(self) -> list[MCPToolset]:
-        await self._load_all_tools()
-        return self.tools.copy()
+        tools = await self._load_all_tools()
+        return tools
         
     async def _load_all_tools(self):
         """ 
@@ -27,24 +27,22 @@ class MCPConnector:
             servers = self.discovery.list_all_servers()
             for server_name, server_info in servers.items():
                 if server_info.get("command") == "streamable-http":
-                    conn = StreamableHTTPServerParams(url=server_info["args"][0])
+                    conn = StreamableHTTPConnectionParams(url=server_info["args"][0])
                 else:
                     conn = StdioConnectionParams(
                         StdioServerParameters(command=server_info["command"], args=server_info.get("args", [])),
                         timeout = 5)
-                    
-                toolset = MCPToolset(connection_params=conn, name=server_name)
+                
+                toolset = MCPToolset(connection_params=conn)
                 tools = await toolset.get_tools()
                 tool_names = [tool.name for tool in tools]
-                print(f"[bold greeen]Loaded tools from {server_name}: {tool_names}")
+                print(f"🌼🌼🌼 Loaded tools from {server_name}: {tool_names}")
                 self.tools.append(toolset)
+                
+                return self.tools.copy()
         except Exception as e:
-            print(f"[bold red]Error loading tools: {e}[/bold red]")
+            print(f"💥💥💥 Error loading tools: {e}")
         
-    
-    def get_tools(self) -> list[MCPToolset]:
-        """ Return the list of cached MCPToolset instances. """
-        return self.tools.copy()
         
             
         

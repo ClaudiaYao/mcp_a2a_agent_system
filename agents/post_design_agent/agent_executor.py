@@ -5,6 +5,7 @@ from agents.post_design_agent.agent import PostDesignAgent
 from a2a.server.tasks import TaskUpdater
 from a2a.types import TaskState
 import asyncio
+from a2a.types import Message
 
 class PostDesignAgentExecutor(AgentExecutor):
     def __init__(self):
@@ -17,7 +18,7 @@ class PostDesignAgentExecutor(AgentExecutor):
     async def execute(self, request_context: RequestContext, event_queue: EventQueue) -> str:
         
         query = request_context.get_user_input()
-        task = request_context.current_task()
+        task = request_context.current_task
         if not task:
             task = new_task(request_context.message)
             await event_queue.enqueue_event(task)
@@ -35,13 +36,14 @@ class PostDesignAgentExecutor(AgentExecutor):
                 else:
                     final_result = item.get("content", "no result is received.")
                     await updater.update_status(TaskState.completed, new_agent_text_message(final_result, task.context_id, task.id))
+                    return final_result
                     
                 await asyncio.sleep(0.1)  # Yield control to the event loop
-                break
+                
         except Exception as e:
             error_message = f"Error during agent execution: {e}"
             await updater.update_status(TaskState.failed, new_agent_text_message(error_message, task.context_id, task.id))
-            raise
+            return "No result produced by agent."
         
     async def cancel(self):
         """ Handle any cleanup if the execution is cancelled. """

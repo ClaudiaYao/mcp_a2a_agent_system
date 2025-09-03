@@ -5,10 +5,12 @@ from a2a.server.tasks import InMemoryTaskStore
 from agents.post_design_agent.agent_executor import PostDesignAgentExecutor
 from a2a.server.apps import A2AStarletteApplication
 import uvicorn
+from config import config
+
 
 @click.command()
 @click.option('--host', default='localhost', help='Host for the agent server.')
-@click.option('--port', default=10000, help='Port for the agent server.')
+@click.option('--port', default=int(config.POST_DESIGN_AGENT_PORT), help='Port for the agent server.')
 def main(host: str, port: int):
     skill = AgentSkill(
         name="PostDesignAgent",

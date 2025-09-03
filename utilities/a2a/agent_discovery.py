@@ -1,7 +1,7 @@
 import os
 import json
 from a2a.types import AgentCard
-from a2a.client import A2ACardResolver, A2AClient
+from a2a.client import A2ACardResolver
 import httpx
 
 class AgentDiscovery:
@@ -58,14 +58,13 @@ class AgentDiscovery:
             for base_url in self.base_urls:
                 try:
                     resolver = A2ACardResolver(base_url=base_url, httpx_client=httpx_client)
-                    client = A2AClient(card_resolver=resolver, httpx_client=httpx_client)
-                    card = await client.get_agent_card()
+                    card  = await resolver.get_agent_card()
                     if card:
                         agent_cards.append(card)
-                        print(f"[bold green]Discovered agent: {card.name} at {base_url}[/bold green]")
+                        print(f"🌳🌳🌳 Discovered agent: {card.name} at {base_url}")
                     else:
-                        print(f"[bold yellow]No AgentCard found at {base_url}[/bold yellow]")
+                        print(f"⭐️⭐️⭐️ No AgentCard found at {base_url}")
                 except Exception as e:
-                    print(f"[bold red]Error retrieving AgentCard from {base_url}: {e}[/bold red]")
+                    print(f"💥💥💥 Error retrieving AgentCard from {base_url}: {e}")
                     
         return agent_cards

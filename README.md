@@ -13,12 +13,15 @@
 3. Type "uv sync"
 4. Type "source .venv/bin/activate"
 5. Input GOOGLE_API_KEY to .env file (Acquire key from https://aistudio.google.com/apikey, other settings could keep unchanged)
+   <img src="static/update_google_api.png" width="400px">
 6. Type "make run-all" to start all the programs
 7. In the opened browser window, try the agentic AI. (note: there are one PostDesignAgent and one math-mcp-server. If the host agent could not find useful tool, it will not use any tool and reply to you directly)
 
 <p float="left">
-  <img src="static/test_agent.png" height='600px' style="padding:10px">
-  <img src="static/test_math_mcp.png" height='600px' style="padding:10px">
+  <img src="static/test_math_mcp.png" width='500px' style="padding:10px">
+  <br>
+  <img src="static/test_agent.png" width='500px' style="padding:10px">
+
 </p>
 
 ## TODO:
